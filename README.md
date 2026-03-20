@@ -1,59 +1,64 @@
-Scapegoat
+🎮 Scapegoat
 
-A 7-week team project built in Unity where I worked as an enemy and level systems programmer, focusing on combat systems, AI behavior, wave spawning, progression logic, and performance-conscious design.
+Enemy & Level Systems Programming — Unity (C#)
+7-week team project — this repository contains only my contributions
 
-🎮 Overview
+🧭 Overview
 
-Scapegoat is a third-person action game centered around combat encounters and objective-based progression.
+Scapegoat is a third-person action game developed as a team project in Unity.
 
-My work focused on building systems that:
+This repository contains the systems and scripts I personally implemented, focusing on:
 
-support scalable enemy behavior
+enemy behavior
 
-enable controllable encounter pacing
+combat systems
 
-integrate combat with level progression
+encounter design
 
-remain performant under increasing enemy counts
+progression logic
 
-🧠 My contributions
+performance-conscious enemy management
 
-Designed and implemented a reusable enemy architecture using inheritance
+My goal was to build scalable gameplay systems that support responsive combat while remaining stable under increasing enemy counts.
 
-Built state-driven AI for melee and ranged enemies
+🧠 My Contributions
 
-Developed a wave-based spawning system with scaling and composition control
+The code in this repository reflects my work on:
 
-Implemented a Unity object pooling system for enemy reuse
+🧱 Reusable enemy architecture using inheritance
 
-Built campfire-based objective flow tied to combat progression
+🤖 State-driven AI for melee and ranged enemies
 
-Implemented portal unlock logic with save/load integration
+🌊 Wave-based spawning with scaling and composition control
 
-Debugged and resolved AI state and combat edge cases
+♻️ Object pooling system for enemy reuse
 
-Collaborated closely with designers to translate gameplay intent into systems
+🔥 Campfire objective system tied to combat progression
 
-⚙️ Key systems
-Enemy architecture
+🚪 Portal unlock system with save/load integration
+
+🐛 Debugging AI state issues and combat edge cases
+
+⚙️ Key Systems (from my implementation)
+🧱 Enemy Architecture
 
 I structured enemies using a small inheritance hierarchy:
 
-Enemy → shared functionality (health, movement, state handling)
+Enemy → shared logic (health, movement, state handling)
 
 EnemyGrunt → shared behavior layer
 
-MeleeEnemy / RangedEnemy → specialized combat logic
+MeleeEnemy / RangedEnemy → specialized combat
 
-This allowed me to:
+Why this approach:
 
-reuse core functionality across enemy types
+avoids duplicated logic
 
-isolate combat differences cleanly
+keeps behavior modular
 
-extend behavior without duplicating logic
+makes new enemy types easier to extend
 
-Enemy AI (state-driven behavior)
+🤖 Enemy AI (State-Driven Behavior)
 
 Enemy behavior is driven by explicit state transitions:
 
@@ -65,138 +70,127 @@ Attacking
 
 Dying
 
-State changes are based primarily on distance checks and combat conditions.
-
-This approach:
-
-kept behavior predictable
-
-simplified debugging
-
-reduced conflicting logic between actions
-
-Example:
+State changes are primarily based on distance checks and combat conditions.
 
 if (sqrDistanceToPlayer <= attackRange * attackRange)
     SetState(EnemyState.Attacking);
-Wave spawning and encounter design
 
-I implemented a wave-based spawning system to control combat pacing.
+💬 State-driven logic keeps behavior predictable and easier to debug.
 
-Key features:
+🌊 Wave Spawning & Encounter Design
 
-progressive wave scaling
+I implemented a wave-based spawning system to control combat pacing:
 
-melee/ranged enemy composition control
+progressive difficulty scaling
+
+melee/ranged composition control
 
 multiple spawn points
 
-active enemy cap to prevent overload
+active enemy cap
 
-Example:
+int waveSize = Mathf.RoundToInt(
+    baseWaveSize * Mathf.Pow(spawnRateIncreaseMultiplier, waveCounter)
+);
 
-int waveSize = Mathf.RoundToInt(baseWaveSize * Mathf.Pow(spawnRateIncreaseMultiplier, waveCounter));
+💬 Encounters escalate over time while staying readable and controlled.
 
-This allowed encounters to:
+♻️ Performance & Enemy Management
 
-escalate over time
-
-remain readable for the player
-
-avoid overwhelming spikes
-
-Performance and enemy management
-
-During development, frequent instantiation/destruction caused performance issues.
+Frequent instantiation/destruction caused performance issues early in development.
 
 To address this, I implemented an object pooling system:
 
 GameObject obj = objectPool.Dequeue();
 obj.SetActive(true);
 
-Instead of creating/destroying enemies:
+Impact:
 
-enemies are reused from a pool
+reduced allocation overhead
 
-allocation overhead is reduced
+fewer frame spikes
 
-combat performance becomes more stable
+more stable combat under load
 
-Additional measures:
+Additional measures in my systems:
 
-enemy cap limits
+enemy count caps
 
 NavMesh-based spawn validation
 
-Objectives and progression
+🔥 Objectives & Progression
 
-I implemented a campfire-based objective system tied to combat progression.
+I implemented a campfire-based objective flow tied to combat:
 
-defeating enemies contributes to objective completion
+defeating enemies contributes to objective progress
 
 completing objectives unlocks portals
 
 portal states persist through save/load data
-
-Example:
 
 if (extinguishedCampfires >= requiredCampfires)
 {
     UnlockPortal();
 }
 
-This connected:
+💬 This connects combat → objectives → progression.
 
-combat → objectives → level progression
+🧪 Technical Challenges (from my systems)
+⚠️ State transition bugs
 
-🧪 Technical challenges
-Enemy state issues
+Problem: Enemies could get stuck or fail to transition
+Fix: Tightened state checks and transition conditions
+Result: More reliable combat behavior
 
-Problem: Enemies could get stuck or fail to transition correctly
-Fix: Tightened state transition logic and validation checks
-Result: More reliable and predictable combat behavior
-
-Attack range bugs
+🎯 Attack range issues
 
 Problem: Enemies attacked outside valid range
-Fix: Added precise distance checks with thresholds
-Result: Improved combat feel and fairness
+Fix: Added precise distance validation
+Result: Improved fairness and responsiveness
 
-Spawn issues
+📍 Spawn issues
 
-Problem: Enemies spawned too close or in invalid locations
-Fix: Added NavMesh-based spawn validation
-Result: Fairer and more consistent encounters
+Problem: Enemies spawned too close or in invalid positions
+Fix: NavMesh-based spawn validation
+Result: Fairer encounter starts
 
-Performance under load
+🚀 Performance under load
 
-Problem: Too many enemies caused runtime slowdowns
-Fix: Introduced enemy caps and object pooling
-Result: More stable performance during intense encounters
+Problem: Too many enemies caused slowdowns
+Fix: Enemy caps + object pooling
+Result: More stable performance during intense fights
 
-🤝 Collaboration
+🤝 Collaboration Context
+
+Scapegoat was developed in a team environment.
+
+While this repository contains only my code, my systems were built to integrate with:
+
+designer-defined gameplay flow
+
+level structure and objectives
+
+broader game systems developed by the team
 
 I worked closely with designers to:
 
-translate gameplay flow into systems
+translate gameplay intent into systems
 
 iterate on enemy behavior and pacing
 
-refine difficulty and progression through playtesting
+refine combat through playtesting
 
-Design intent was often communicated through flowcharts, which I translated into structured gameplay logic.
+🧠 Key Takeaways
 
-🧠 Key takeaways
+Designing reusable systems improves iteration speed
 
-Designing reusable gameplay systems improves iteration speed
+Simple, explicit logic leads to more reliable gameplay behavior
 
-Simple, explicit state logic is often more robust than complex abstractions
+Performance must be considered early in combat-heavy systems
 
-Performance considerations must be integrated early in system design
+Collaboration is essential for achieving strong game feel
 
-Collaboration with designers is essential for achieving good game feel
-
-🛠 Tech
+🛠 Tech Stack
 
 Unity
 
@@ -206,6 +200,6 @@ NavMesh
 
 Perforce
 
-📎 Notes
+🔗 Notes
 
-This repository contains selected systems and scripts from the project.
+This repository contains a curated subset of scripts representing my contributions to the Scapegoat project.
